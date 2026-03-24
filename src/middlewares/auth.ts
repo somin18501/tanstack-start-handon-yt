@@ -26,7 +26,7 @@ export const authSessionReqMiddleware = createMiddleware({
 
   if (
     !url.pathname.startsWith('/dashboard') &&
-    !url.pathname.startsWith('/api')
+    !url.pathname.startsWith('/api/ai')
   ) {
     return next()
   }
