@@ -128,8 +128,8 @@ export const scrapeEachUrlsServerFn = createServerFn({ method: 'POST' })
             'markdown',
             {
               type: 'json',
-              schema: extractSchema,
-              // prompt: 'Extract the author and publishedAt from the page.', // NOTE: This is working as expected but using schema is more reliable
+              // schema: extractSchema, // TODO: Zod v4 incompatible with Firecrawl SDK
+              prompt: 'Extract the author and publishedAt from the page.', // NOTE: This is working as expected but using schema is more reliable
             },
           ],
           onlyMainContent: true, // NOTE: By default the scraper returns only the main content of the page, setting this to false will return the entire page content.
@@ -140,7 +140,7 @@ export const scrapeEachUrlsServerFn = createServerFn({ method: 'POST' })
         const jsonData = result.json as z.infer<typeof extractSchema>
 
         let publishedAt = null
-        if (jsonData.publishedAt) {
+        if (jsonData?.publishedAt) {
           const parsedDateTime = new Date(jsonData.publishedAt)
 
           if (!isNaN(parsedDateTime.getTime())) {
@@ -157,7 +157,7 @@ export const scrapeEachUrlsServerFn = createServerFn({ method: 'POST' })
             title: result.metadata?.title || null,
             content: result.markdown || null,
             status: ItemStatus.COMPLETED,
-            author: jsonData.author || null,
+            author: jsonData?.author || null,
             publishedAt,
           },
         })
